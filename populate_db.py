@@ -1,24 +1,23 @@
 import os
-import django
-import random
+from django.core.wsgi import get_wsgi_application
+from datetime import date, timedelta
 from faker import Faker
+import random
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vacation_system.settings")
-django.setup()
+application = get_wsgi_application()
 
 from employees.models import Employee, Vacation, VacationReceipt
-from datetime import date, timedelta
 
 fake = Faker()
 
-# Crear empleados con datos aleatorios
 def create_employees(num_employees):
     employees = []
     for _ in range(num_employees):
         name = fake.first_name()
         last_name = fake.last_name()
         address = fake.address()
-        phone = fake.phone_number()
+        phone = fake.phone_number()[:20]
         position = fake.job()
         entry_date = fake.date_between(start_date="-2y", end_date="today")
         
@@ -26,7 +25,6 @@ def create_employees(num_employees):
         employees.append(employee)
     Employee.objects.bulk_create(employees)
 
-# Asignar vacaciones y recibos de vacaciones a empleados
 def assign_vacations_and_receipts():
     employees = Employee.objects.all()
     for employee in employees:
@@ -41,7 +39,7 @@ def assign_vacations_and_receipts():
         receipt.save()
 
 if __name__ == "__main__":
-    num_employees = 20  # Puedes ajustar la cantidad de empleados que deseas crear
+    num_employees = 20
     create_employees(num_employees)
     assign_vacations_and_receipts()
-    print(f"{num_employees} empleados creados con vacaciones y recibos de vacaciones.")
+    print(f"{num_employees} employees created with vacations and vacation receipts.")

@@ -84,8 +84,12 @@ WSGI_APPLICATION = 'vacation_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'employees_db',
+        'USER': 'root',
+        'PASSWORD': '1234567',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
