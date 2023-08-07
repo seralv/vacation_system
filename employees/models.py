@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -12,6 +13,11 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.last_name}"
+    
+    @property
+    def is_on_vacation(self):
+        today = datetime.date.today()
+        return self.vacation_start_date <= today <= self.vacation_end_date
     
 class Vacation(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
