@@ -1,5 +1,6 @@
 from datetime import timedelta
 from django.utils import timezone
+from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 
@@ -44,6 +45,16 @@ class VacationViewSet(viewsets.ModelViewSet):
             raise Exception("Not enough remaining vacation days for this employee.")
 
         serializer.save()
+
+class VacationListByEmployee(APIView):
+    def get(self, request, employee_id, format=None):
+        try:
+            employee = Employee.objects.get(pk=employee_id)
+            vacations = Vacation.objects.filter(employee=employee)
+            serializer = VacationSerializer(vacations, many=True)
+            return Response(serializer.data)
+        except Employee.DoesNotExist:
+            return Response(status=404)
 
 class VacationReceiptViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = VacationReceipt.objects.all()
